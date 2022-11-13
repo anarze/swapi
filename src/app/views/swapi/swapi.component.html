@@ -1,0 +1,51 @@
+<section class="flex flex-row justify-center mt-10 mb-10">
+  <div class="basis-2/3">
+    <div class="grid gap-5">
+      <div class="flex flex-col justify-center items-center">
+        <img src="./assets/pngwing.com.png" class="w-32 h-32 cursor-pointer" (click)="resetSearch()">
+        <h1 class="text-3xl text-center text-green-800 font-serif">
+          SWAPI
+        </h1>
+      </div>
+      <tui-input
+        tuiTextfieldIcon="tuiIconSearchLarge"
+        [formControl]="searchPhrase"
+      >
+        Search
+        <input tuiTextfield />
+      </tui-input>
+
+      <ng-container *tuiLet="characters$ | async as characters">
+        <ng-container *tuiLet="charactersLoading$ | async as charactersLoading">
+          <table *ngIf="characters && !charactersLoading" tuiTable [columns]="columnKeys">
+            <thead>
+            <tr tuiThGroup>
+              <ng-container *ngFor="let column of columns">
+                <th tuiTh>
+                  {{ column.header }}
+                </th>
+              </ng-container>
+            </tr>
+            </thead>
+            <tbody tuiTbody [data]="characters.results">
+            <tr
+              *tuiRow="let character of characters.results; let index = index"
+              tuiTr
+            >
+            </tr>
+            </tbody>
+          </table>
+          <tui-loader *ngIf="charactersLoading" [inheritColor]="true"></tui-loader>
+          <tui-table-pagination
+            *ngIf="characters && !charactersLoading"
+            [total]="characters.count"
+            [size]="10"
+            [page]="(page$ | async) ?? 1"
+            (pageChange)="page$.next($event)"
+          >
+          </tui-table-pagination>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</section>
